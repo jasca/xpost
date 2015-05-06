@@ -106,6 +106,17 @@ function xpost_crosspost( $localPostId ) {
 			// because we don't know which slugs already exist in blog we post
 			// to.
 			//$postData['wp_slug'] = stripslashes( $_POST['name'] );
+			
+			//Fix for issue no show tags in wp > 4.2 by JASCA [2015-5-6] jscavino@trememote.com.ar
+			//Obtenemos los tags relativos al post 
+			$terms = wp_get_post_terms( $localPostId, 'post_tag');
+			foreach($terms as $term)
+			{
+				if(is_object($term))
+				   $postData['mt_keywords'][] = $term->name;
+			}
+
+			
 			$postData['mt_keywords'] = stripslashes( $_POST['tax_input']['post_tag'] );
 			$postData['mt_allow_comments'] = ($_POST['comment_status'] == 'open') ? 1 : 0;
 			$postData['mt_allow_pings'] = ($_POST['ping_status'] == 'open') ? 1 : 0;
